@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">MEMORI AI</string>
+    <string name="app_subtitle">Seu assistente inteligente</string>
+    <string name="welcome_message">MEMORI: Olá! Você pode digitar ou usar a entrada de voz.
+
+Nota: o chat com IA requer a configuração de um serviço de IA.</string>
+    <string name="message_hint">Digite sua mensagem...</string>
+    <string name="send">Enviar</string>
+    <string name="voice">Voz</string>
+    <string name="you_prefix">Você: </string>
+    <string name="demo_reply">A interface está pronta. Conecte um provedor de IA por meio de um servidor seguro para ativar respostas inteligentes.</string>
+    <string name="speech_prompt">Fale agora</string>
+    <string name="speech_unavailable">O reconhecimento de fala não está disponível neste dispositivo.</string>
+    <string name="mic_permission_required">É necessária a permissão do microfone para usar a voz.</string>
+</resources>
