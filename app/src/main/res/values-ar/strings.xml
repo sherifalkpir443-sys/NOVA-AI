@@ -1,15 +1,25 @@
 <resources>
     <string name="app_name">MEMORI AI</string>
     <string name="app_subtitle">مساعدك الذكي</string>
-    <string name="welcome_message">ميموري: أهلاً بيك! تقدر تكتب رسالة أو تستخدم الإدخال الصوتي.
-
-ملحوظة: المحادثة الذكية المباشرة محتاجة إعداد خدمة ذكاء اصطناعي.</string>
+    <string name="welcome_message">ميموري: أهلاً بيك! اكتب رسالة أو استخدم الإدخال الصوتي. لتفعيل الردود الذكية، اضبط عنوان خادم الذكاء الاصطناعي من الإعدادات.</string>
     <string name="message_hint">اكتب رسالتك هنا...</string>
     <string name="send">إرسال</string>
     <string name="voice">صوت</string>
     <string name="you_prefix">أنت: </string>
-    <string name="demo_reply">واجهة المحادثة جاهزة. لتفعيل الردود الذكية، لازم توصيل مزود ذكاء اصطناعي بخادم آمن.</string>
+    <string name="demo_reply">واجهة المحادثة جاهزة. وصّل خادم ذكاء اصطناعي آمن لتفعيل الردود الذكية.</string>
     <string name="speech_prompt">اتكلم دلوقتي</string>
     <string name="speech_unavailable">التعرّف على الكلام مش متاح على الجهاز ده.</string>
     <string name="mic_permission_required">لازم تسمح باستخدام الميكروفون عشان تستخدم الصوت.</string>
+    <string name="settings">الإعدادات</string>
+    <string name="ai_server">عنوان خادم الذكاء الاصطناعي</string>
+    <string name="ai_server_help">اكتب عنوان خادم آمن يبدأ بـ HTTPS. التطبيق هيبعت طلب POST على /chat فيه message وlanguage، ومتوقع رد JSON فيه reply. ما تحطش مفتاح API سري جوه التطبيق.</string>
+    <string name="clear">مسح</string>
+    <string name="server_removed">تم مسح عنوان الخادم.</string>
+    <string name="https_required">لأمانك، لازم العنوان يبدأ بـ https://</string>
+    <string name="server_saved">تم حفظ عنوان الخادم.</string>
+    <string name="configure_server">علشان تفعّل الردود الذكية، اضبط عنوان خادم الذكاء الاصطناعي من الإعدادات.</string>
+    <string name="connection_error">مش قادر أوصل لخادم الذكاء الاصطناعي:</string>
+    <string name="server_error">الخادم رجّع خطأ HTTP</string>
+    <string name="invalid_server_response">رد الخادم ناقص أو مفيهوش حقل reply.</string>
+    <string name="working">جاري الإرسال…</string>
 </resources>
