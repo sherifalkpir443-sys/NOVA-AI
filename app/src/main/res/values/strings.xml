@@ -1,7 +1,15 @@
 <resources>
     <string name="app_name">MEMORI AI</string>
-    <string name="app_subtitle">مساعدك الذكي — بيتكلم معاك بالمصري</string>
-    <string name="message_hint">اكتب رسالتك هنا...</string>
-    <string name="send">إرسال</string>
-    <string name="voice">صوت</string>
+    <string name="app_subtitle">Your intelligent assistant</string>
+    <string name="welcome_message">MEMORI: Hello! You can type a message or use voice input.
+
+Note: Live AI chat requires a configured AI service.</string>
+    <string name="message_hint">Type your message...</string>
+    <string name="send">Send</string>
+    <string name="voice">Voice</string>
+    <string name="you_prefix">You: </string>
+    <string name="demo_reply">The chat interface is ready. Connect an AI provider and secure server to enable intelligent replies.</string>
+    <string name="speech_prompt">Speak now</string>
+    <string name="speech_unavailable">Speech recognition is not available on this device.</string>
+    <string name="mic_permission_required">Microphone permission is required to use voice input.</string>
 </resources>
