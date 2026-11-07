@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">MEMORI AI</string>
+    <string name="app_subtitle">あなたのスマートアシスタント</string>
+    <string name="welcome_message">MEMORI：こんにちは。メッセージを入力するか、音声入力を利用できます。
+
+注：AIチャットを利用するにはAIサービスの設定が必要です。</string>
+    <string name="message_hint">メッセージを入力...</string>
+    <string name="send">送信</string>
+    <string name="voice">音声</string>
+    <string name="you_prefix">あなた：</string>
+    <string name="demo_reply">画面の準備ができました。安全なサーバー経由でAIプロバイダーを接続すると、AI応答を利用できます。</string>
+    <string name="speech_prompt">話してください</string>
+    <string name="speech_unavailable">この端末では音声認識を利用できません。</string>
+    <string name="mic_permission_required">音声入力にはマイクの許可が必要です。</string>
+</resources>
