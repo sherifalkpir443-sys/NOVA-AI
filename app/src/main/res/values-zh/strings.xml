@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">MEMORI AI</string>
+    <string name="app_subtitle">你的智能助手</string>
+    <string name="welcome_message">MEMORI：你好！你可以输入消息或使用语音输入。
+
+注意：智能对话需要配置 AI 服务。</string>
+    <string name="message_hint">输入消息...</string>
+    <string name="send">发送</string>
+    <string name="voice">语音</string>
+    <string name="you_prefix">你：</string>
+    <string name="demo_reply">界面已就绪。通过安全服务器连接 AI 服务商即可启用智能回复。</string>
+    <string name="speech_prompt">请开始说话</string>
+    <string name="speech_unavailable">此设备不支持语音识别。</string>
+    <string name="mic_permission_required">使用语音功能需要麦克风权限。</string>
+</resources>
