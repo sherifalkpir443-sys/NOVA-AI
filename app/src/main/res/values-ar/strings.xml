@@ -22,4 +22,19 @@
     <string name="server_error">الخادم رجّع خطأ HTTP</string>
     <string name="invalid_server_response">رد الخادم ناقص أو مفيهوش حقل reply.</string>
     <string name="working">جاري الإرسال…</string>
+    <string name="choose_character">اختار الشخصية اللي تحب تتكلم معاها</string>
+    <string name="choose_character_subtitle">تحب تتكلم مع شخصية ذكر ولا أنثى؟</string>
+    <string name="voice_first_note">اختار الشخصية، واسمح باستخدام الميكروفون، وابدأ كلامك بالصوت.</string>
+    <string name="male_character">شخصية ذكر</string>
+    <string name="female_character">شخصية أنثى</string>
+    <string name="tap_to_choose">اضغط للاختيار</string>
+    <string name="voice_companion">مساعدك الذكي بالصوت</string>
+    <string name="ready_to_listen">أنا جاهز أسمعك.. دوس على الزر واتكلم</string>
+    <string name="start_talking">ابدأ الكلام</string>
+    <string name="change_character">تغيير الشخصية</string>
+    <string name="mic_privacy_note">الميكروفون بيشتغل بس لما تضغط على ابدأ الكلام.</string>
+    <string name="listening_now">سامعك.. اتكلم دلوقتي</string>
+    <string name="thinking">ثواني بفكر في الرد</string>
+    <string name="server_not_configured">وصّل خدمة الذكاء الاصطناعي علشان نبدأ المحادثة.</string>
+    <string name="connection_problem">مش قادر أوصل لخدمة الذكاء الاصطناعي. راجع الإنترنت وإعدادات الخادم.</string>
 </resources>
