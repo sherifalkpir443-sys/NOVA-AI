@@ -1,31 +1,36 @@
-# NOVA-AI
-NOVA AI Android Assistant
-NOVA AI
+# NOVA AI
 
-NOVA AI Android Assistant
+تطبيق أندرويد تجريبي لمساعد ذكي بواجهة عربية مصرية، مع إدخال نصي وإملاء صوتي ونطق عربي عبر خدمات النظام.
 
-NOVA AI is an intelligent Android personal assistant.
+## المتطلبات
 
-Features
+- Android Studio حديث
+- JDK 17
+- Android SDK Platform 35
+- Gradle 8.7 (يتم توفيره في سير عمل GitHub Actions)
 
-- Arabic Egyptian voice conversation.
-- Realistic animated human-like assistant interface.
-- Male and female assistant personalities.
-- Voice input and voice responses.
-- Android permissions management.
-- User-approved device actions.
-- Privacy and security protection.
+## البناء محليًا
 
-Android Requirements
+1. افتح المجلد في Android Studio.
+2. انتظر مزامنة Gradle وتنزيل Android SDK المطلوب.
+3. شغّل مهمة `:app:assembleDebug`.
+4. ملف APK الناتج: `app/build/outputs/apk/debug/app-debug.apk`.
 
-- Android 8.0 or later.
-- Microphone permission for voice interaction.
-- Internet permission for AI services.
+## البناء التلقائي
 
-Project Goal
+كل دفع إلى فرع `main` يشغّل GitHub Actions لبناء نسخة Debug APK. بعد نجاح التشغيل، نزّل العنصر `NOVA-AI-debug-apk` من صفحة Actions الخاصة بالمستودع.
 
-Build a complete Android application (APK) with an interactive AI assistant that communicates naturally with the user and performs supported phone operations only after explicit user approval.
+## الحالة الحالية والحدود
 
-Development Status
+- الواجهة النصية موجودة.
+- إدخال الكلام يستخدم خدمة التعرف على الكلام المتاحة على الجهاز، ويتطلب إذن الميكروفون عند الاستخدام.
+- قراءة الردود تستخدم Android TextToSpeech باللغة العربية المصرية إذا كانت بيانات الصوت متاحة على الجهاز.
+- **المحادثة الذكية الفعلية غير موصولة بعد**: يلزم إعداد مزود نموذج وخادم وسيط آمن. لا تضع مفاتيح API سرية داخل التطبيق أو المستودع.
+- لا ينفذ التطبيق إجراءات على الهاتف دون طلب الإذن المناسب من المستخدم.
 
-Project setup and development in progress.
+## إعدادات المشروع
+
+- Application ID: `com.nova.ai`
+- Minimum SDK: 26
+- Target / Compile SDK: 35
+- Java: 17
