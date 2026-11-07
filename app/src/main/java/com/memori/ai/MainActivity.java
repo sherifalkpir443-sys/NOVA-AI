@@ -70,7 +70,7 @@ public class MainActivity extends Activity {
 
         ScrollView scroll = new ScrollView(this);
         conversation = new TextView(this);
-        conversation.setText("MEMORI: أهلاً بيك! أنا MEMORI. تقدر تكتبلي أو تضغط على زر الصوت.\n\nملاحظة: الاتصال بخدمة الذكاء الاصطناعي لسه محتاج إعداد مفتاح الخدمة.");
+        conversation.setText(getString(R.string.welcome_message));
         conversation.setTextColor(0xFFF2F6FC);
         conversation.setTextSize(16);
         conversation.setGravity(Gravity.START);
