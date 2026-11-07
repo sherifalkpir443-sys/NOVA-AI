@@ -1,15 +1,25 @@
 <resources>
     <string name="app_name">MEMORI AI</string>
     <string name="app_subtitle">Your intelligent assistant</string>
-    <string name="welcome_message">MEMORI: Hello! You can type a message or use voice input.
-
-Note: Live AI chat requires a configured AI service.</string>
+    <string name="welcome_message">MEMORI: Hello! Type a message or use voice input. To enable AI replies, configure your secure AI server in Settings.</string>
     <string name="message_hint">Type your message...</string>
     <string name="send">Send</string>
     <string name="voice">Voice</string>
     <string name="you_prefix">You: </string>
-    <string name="demo_reply">The chat interface is ready. Connect an AI provider and secure server to enable intelligent replies.</string>
+    <string name="demo_reply">The chat interface is ready. Connect a secure AI server to enable intelligent replies.</string>
     <string name="speech_prompt">Speak now</string>
     <string name="speech_unavailable">Speech recognition is not available on this device.</string>
     <string name="mic_permission_required">Microphone permission is required to use voice input.</string>
+    <string name="settings">Settings</string>
+    <string name="ai_server">AI server address</string>
+    <string name="ai_server_help">Enter your HTTPS backend address. The app sends POST /chat with JSON fields message and language, and expects a JSON reply field. Never put a private AI API key in this app.</string>
+    <string name="clear">Clear</string>
+    <string name="server_removed">AI server address removed.</string>
+    <string name="https_required">For security, the server address must start with https://</string>
+    <string name="server_saved">AI server address saved.</string>
+    <string name="configure_server">To use real AI replies, configure your secure AI server in Settings.</string>
+    <string name="connection_error">Could not contact the AI server:</string>
+    <string name="server_error">AI server returned HTTP error</string>
+    <string name="invalid_server_response">The AI server response is missing the reply field.</string>
+    <string name="working">Sending…</string>
 </resources>
