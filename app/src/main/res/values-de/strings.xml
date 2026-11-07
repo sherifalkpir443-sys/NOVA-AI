@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">MEMORI AI</string>
+    <string name="app_subtitle">Dein intelligenter Assistent</string>
+    <string name="welcome_message">MEMORI: Hallo! Du kannst schreiben oder die Spracheingabe verwenden.
+
+Hinweis: Für den KI-Chat muss ein KI-Dienst eingerichtet werden.</string>
+    <string name="message_hint">Nachricht eingeben...</string>
+    <string name="send">Senden</string>
+    <string name="voice">Sprache</string>
+    <string name="you_prefix">Du: </string>
+    <string name="demo_reply">Die Oberfläche ist bereit. Verbinde einen KI-Anbieter über einen sicheren Server, um intelligente Antworten zu aktivieren.</string>
+    <string name="speech_prompt">Sprich jetzt</string>
+    <string name="speech_unavailable">Spracherkennung ist auf diesem Gerät nicht verfügbar.</string>
+    <string name="mic_permission_required">Für die Spracheingabe ist eine Mikrofonberechtigung erforderlich.</string>
+</resources>
