@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">NOVA AI</string>
+    <string name="app_name">MEMORI AI</string>
     <string name="app_subtitle">مساعدك الذكي — بيتكلم معاك بالمصري</string>
     <string name="message_hint">اكتب رسالتك هنا...</string>
     <string name="send">إرسال</string>
