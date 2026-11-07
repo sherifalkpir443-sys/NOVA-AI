@@ -39,6 +39,8 @@ public class MainActivity extends Activity {
     private static final int REQUEST_AUDIO_PERMISSION = 42;
     private static final String PREFS = "memori_settings";
     private static final String KEY_ENDPOINT = "chat_endpoint";
+    private static final String KEY_CHARACTER = "selected_character";
+    private boolean onboardingPermissionRequest = false;
 
     private TextView conversation;
     private EditText messageInput;
@@ -53,7 +55,8 @@ public class MainActivity extends Activity {
         preferences = getSharedPreferences(PREFS, MODE_PRIVATE);
         getWindow().setStatusBarColor(0xFF080D18);
         getWindow().setNavigationBarColor(0xFF080D18);
-        buildInterface();
+        if (preferences.getString(KEY_CHARACTER, null) == null) buildCharacterSelection();
+        else buildInterface();
         tts = new TextToSpeech(this, status -> {
             if (status == TextToSpeech.SUCCESS && tts != null) {
                 int result = tts.setLanguage(Locale.getDefault());
@@ -61,6 +64,91 @@ public class MainActivity extends Activity {
                         result != TextToSpeech.LANG_NOT_SUPPORTED;
             }
         });
+    }
+
+    private void buildCharacterSelection() {
+        LinearLayout root = new LinearLayout(this);
+        root.setOrientation(LinearLayout.VERTICAL);
+        root.setGravity(Gravity.CENTER);
+        root.setPadding(dp(24), dp(32), dp(24), dp(28));
+        root.setBackgroundColor(0xFF070B16);
+
+        TextView brand = new TextView(this);
+        brand.setText("MEMORI AI");
+        brand.setTextColor(0xFF83DFFF);
+        brand.setTextSize(17);
+        brand.setGravity(Gravity.CENTER);
+        root.addView(brand, new LinearLayout.LayoutParams(-1, -2));
+
+        TextView headline = new TextView(this);
+        headline.setText("اختار الشخصية اللي تحب تتكلم معاها");
+        headline.setTextColor(0xFFF5F7FC);
+        headline.setTextSize(23);
+        headline.setTypeface(null, android.graphics.Typeface.BOLD);
+        headline.setGravity(Gravity.CENTER);
+        headline.setPadding(0, dp(26), 0, dp(8));
+        root.addView(headline);
+
+        TextView hint = new TextView(this);
+        hint.setText("تقدر تغيّر اختيارك في أي وقت");
+        hint.setTextColor(0xFF9AAAC2);
+        hint.setTextSize(14);
+        hint.setGravity(Gravity.CENTER);
+        hint.setPadding(0, 0, 0, dp(30));
+        root.addView(hint);
+
+        LinearLayout choices = new LinearLayout(this);
+        choices.setOrientation(LinearLayout.HORIZONTAL);
+        choices.setGravity(Gravity.CENTER);
+        addCharacterCard(choices, "👨🏻", "ذكر", "male");
+        addCharacterCard(choices, "👩🏻", "أنثى", "female");
+        root.addView(choices, new LinearLayout.LayoutParams(-1, dp(230)));
+
+        TextView footer = new TextView(this);
+        footer.setText("بعد الاختيار هنطلب إذن الميكروفون عشان تقدر تتكلم بالصوت");
+        footer.setTextColor(0xFF8494AD);
+        footer.setTextSize(13);
+        footer.setGravity(Gravity.CENTER);
+        footer.setPadding(dp(8), dp(26), dp(8), 0);
+        root.addView(footer, new LinearLayout.LayoutParams(-1, -2));
+        setContentView(root);
+    }
+
+    private void addCharacterCard(LinearLayout parent, String face, String label, String value) {
+        LinearLayout card = new LinearLayout(this);
+        card.setOrientation(LinearLayout.VERTICAL);
+        card.setGravity(Gravity.CENTER);
+        card.setBackgroundColor(0xFF151F32);
+        card.setPadding(dp(10), dp(16), dp(10), dp(16));
+        card.setElevation(dp(5));
+        card.setOnClickListener(v -> selectCharacter(value));
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, -1, 1);
+        params.setMargins(dp(7), 0, dp(7), 0);
+        parent.addView(card, params);
+
+        TextView avatar = new TextView(this);
+        avatar.setText(face);
+        avatar.setTextSize(62);
+        avatar.setGravity(Gravity.CENTER);
+        card.addView(avatar, new LinearLayout.LayoutParams(-1, 0, 1));
+
+        TextView name = new TextView(this);
+        name.setText(label);
+        name.setTextColor(0xFFF5F7FC);
+        name.setTextSize(18);
+        name.setTypeface(null, android.graphics.Typeface.BOLD);
+        name.setGravity(Gravity.CENTER);
+        card.addView(name, new LinearLayout.LayoutParams(-1, -2));
+    }
+
+    private void selectCharacter(String character) {
+        preferences.edit().putString(KEY_CHARACTER, character).apply();
+        if (checkSelfPermission(Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            onboardingPermissionRequest = true;
+            requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}, REQUEST_AUDIO_PERMISSION);
+        } else {
+            buildInterface();
+        }
     }
 
     private int dp(float value) {
@@ -278,6 +366,14 @@ public class MainActivity extends Activity {
 
     @Override public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_AUDIO_PERMISSION && onboardingPermissionRequest) {
+            onboardingPermissionRequest = false;
+            buildInterface();
+            if (grantResults.length == 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, R.string.mic_permission_required, Toast.LENGTH_LONG).show();
+            }
+            return;
+        }
         if (requestCode == REQUEST_AUDIO_PERMISSION && grantResults.length > 0 &&
                 grantResults[0] == PackageManager.PERMISSION_GRANTED) launchRecognizer();
         else if (requestCode == REQUEST_AUDIO_PERMISSION) append(getString(R.string.mic_permission_required));
