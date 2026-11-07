@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">MEMORI AI</string>
+    <string name="app_subtitle">Ваш интеллектуальный помощник</string>
+    <string name="welcome_message">MEMORI: Здравствуйте! Вы можете написать сообщение или использовать голосовой ввод.
+
+Примечание: для работы ИИ-чата требуется настроить ИИ-сервис.</string>
+    <string name="message_hint">Введите сообщение...</string>
+    <string name="send">Отправить</string>
+    <string name="voice">Голос</string>
+    <string name="you_prefix">Вы: </string>
+    <string name="demo_reply">Интерфейс готов. Подключите поставщика ИИ через защищённый сервер, чтобы включить интеллектуальные ответы.</string>
+    <string name="speech_prompt">Говорите</string>
+    <string name="speech_unavailable">Распознавание речи недоступно на этом устройстве.</string>
+    <string name="mic_permission_required">Для голосового ввода требуется разрешение на использование микрофона.</string>
+</resources>
