@@ -32,7 +32,7 @@ public class MainActivity extends Activity {
         buildInterface();
         tts = new TextToSpeech(this, status -> {
             if (status == TextToSpeech.SUCCESS) {
-                int result = tts.setLanguage(new Locale("ar", "EG"));
+                int result = tts.setLanguage(java.util.Locale.getDefault());
                 ttsReady = result != TextToSpeech.LANG_MISSING_DATA &&
                            result != TextToSpeech.LANG_NOT_SUPPORTED;
             }
@@ -54,7 +54,7 @@ public class MainActivity extends Activity {
         root.addView(title, new LinearLayout.LayoutParams(-1, -2));
 
         TextView subtitle = new TextView(this);
-        subtitle.setText("مساعدك الذكي — بيتكلم معاك بالمصري");
+        subtitle.setText(getString(R.string.app_subtitle));
         subtitle.setTextColor(0xFFB8C5D8);
         subtitle.setTextSize(14);
         subtitle.setGravity(Gravity.CENTER);
@@ -82,7 +82,7 @@ public class MainActivity extends Activity {
 
         messageInput = new EditText(this);
         messageInput.setSingleLine(true);
-        messageInput.setHint("اكتب رسالتك هنا...");
+        messageInput.setHint(getString(R.string.message_hint));
         messageInput.setTextColor(0xFFFFFFFF);
         messageInput.setHintTextColor(0xFF91A0B5);
         messageInput.setTextDirection(View.TEXT_DIRECTION_RTL);
@@ -91,10 +91,10 @@ public class MainActivity extends Activity {
         LinearLayout actions = new LinearLayout(this);
         actions.setOrientation(LinearLayout.HORIZONTAL);
         Button send = new Button(this);
-        send.setText("إرسال");
+        send.setText(R.string.send);
         send.setOnClickListener(v -> sendMessage());
         Button voice = new Button(this);
-        voice.setText("🎙 صوت");
+        voice.setText("🎙 " + getString(R.string.voice));
         voice.setOnClickListener(v -> startVoiceInput());
         actions.addView(send, new LinearLayout.LayoutParams(0, -2, 1));
         actions.addView(voice, new LinearLayout.LayoutParams(0, -2, 1));
@@ -105,10 +105,10 @@ public class MainActivity extends Activity {
     private void sendMessage() {
         String text = messageInput.getText().toString().trim();
         if (text.isEmpty()) return;
-        append("أنت: " + text);
+        append(getString(R.string.you_prefix) + text);
         messageInput.setText("");
-        append("MEMORI: واجهة المحادثة شغالة. ربط نموذج الذكاء الاصطناعي هيتم بعد إضافة مزود الخدمة ومفتاح API.");
-        speak("واجهة المحادثة شغالة. ربط الذكاء الاصطناعي لسه محتاج إعداد الخدمة.");
+        append(getString(R.string.demo_reply));
+        speak(getString(R.string.demo_reply));
     }
 
     private void startVoiceInput() {
@@ -122,10 +122,10 @@ public class MainActivity extends Activity {
     private void launchRecognizer() {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "ar-EG");
-        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "اتكلم يا شريف");
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, java.util.Locale.getDefault().toLanguageTag());
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, getString(R.string.speech_prompt));
         try { startActivityForResult(intent, REQUEST_SPEECH); }
-        catch (Exception e) { append("MEMORI: خدمة التعرف على الصوت مش متاحة على الجهاز."); }
+        catch (Exception e) { append(getString(R.string.speech_unavailable)); }
     }
 
     @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -143,7 +143,7 @@ public class MainActivity extends Activity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_AUDIO_PERMISSION && grantResults.length > 0 &&
             grantResults[0] == PackageManager.PERMISSION_GRANTED) launchRecognizer();
-        else if (requestCode == REQUEST_AUDIO_PERMISSION) append("MEMORI: لازم تسمح بالميكروفون عشان تستخدم الصوت.");
+        else if (requestCode == REQUEST_AUDIO_PERMISSION) append(getString(R.string.mic_permission_required));
     }
 
     private void append(String line) {
