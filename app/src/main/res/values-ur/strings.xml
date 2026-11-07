@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">MEMORI AI</string>
+    <string name="app_subtitle">آپ کا ذہین معاون</string>
+    <string name="welcome_message">MEMORI: خوش آمدید! آپ پیغام لکھ سکتے ہیں یا آواز کے ذریعے داخل کر سکتے ہیں۔
+
+نوٹ: AI چیٹ کے لیے AI سروس ترتیب دینا ضروری ہے۔</string>
+    <string name="message_hint">اپنا پیغام لکھیں...</string>
+    <string name="send">بھیجیں</string>
+    <string name="voice">آواز</string>
+    <string name="you_prefix">آپ: </string>
+    <string name="demo_reply">انٹرفیس تیار ہے۔ ذہین جوابات کے لیے محفوظ سرور کے ذریعے AI فراہم کنندہ منسلک کریں۔</string>
+    <string name="speech_prompt">اب بولیں</string>
+    <string name="speech_unavailable">اس آلے پر آواز کی شناخت دستیاب نہیں۔</string>
+    <string name="mic_permission_required">آواز استعمال کرنے کے لیے مائیکروفون کی اجازت ضروری ہے۔</string>
+</resources>
