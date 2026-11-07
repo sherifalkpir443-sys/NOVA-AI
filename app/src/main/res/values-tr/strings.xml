@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">MEMORI AI</string>
+    <string name="app_subtitle">Akıllı asistanınız</string>
+    <string name="welcome_message">MEMORI: Merhaba! Mesaj yazabilir veya sesli girişi kullanabilirsiniz.
+
+Not: Yapay zekâ sohbeti için bir yapay zekâ hizmeti yapılandırılmalıdır.</string>
+    <string name="message_hint">Mesajınızı yazın...</string>
+    <string name="send">Gönder</string>
+    <string name="voice">Ses</string>
+    <string name="you_prefix">Siz: </string>
+    <string name="demo_reply">Arayüz hazır. Akıllı yanıtları etkinleştirmek için güvenli bir sunucu üzerinden yapay zekâ sağlayıcısı bağlayın.</string>
+    <string name="speech_prompt">Şimdi konuşun</string>
+    <string name="speech_unavailable">Bu cihazda konuşma tanıma kullanılamıyor.</string>
+    <string name="mic_permission_required">Sesli giriş için mikrofon izni gereklidir.</string>
+</resources>
