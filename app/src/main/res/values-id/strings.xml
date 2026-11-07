@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">MEMORI AI</string>
+    <string name="app_subtitle">Asisten cerdas Anda</string>
+    <string name="welcome_message">MEMORI: Halo! Anda dapat mengetik pesan atau menggunakan input suara.
+
+Catatan: Obrolan AI memerlukan layanan AI yang telah dikonfigurasi.</string>
+    <string name="message_hint">Ketik pesan Anda...</string>
+    <string name="send">Kirim</string>
+    <string name="voice">Suara</string>
+    <string name="you_prefix">Anda: </string>
+    <string name="demo_reply">Antarmuka siap. Hubungkan penyedia AI melalui server aman untuk mengaktifkan jawaban cerdas.</string>
+    <string name="speech_prompt">Silakan bicara</string>
+    <string name="speech_unavailable">Pengenalan suara tidak tersedia di perangkat ini.</string>
+    <string name="mic_permission_required">Izin mikrofon diperlukan untuk menggunakan suara.</string>
+</resources>
