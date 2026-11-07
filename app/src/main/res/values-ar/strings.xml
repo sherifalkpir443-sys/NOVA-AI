@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">MEMORI AI</string>
+    <string name="app_subtitle">مساعدك الذكي</string>
+    <string name="welcome_message">ميموري: أهلاً بيك! تقدر تكتب رسالة أو تستخدم الإدخال الصوتي.
+
+ملحوظة: المحادثة الذكية المباشرة محتاجة إعداد خدمة ذكاء اصطناعي.</string>
+    <string name="message_hint">اكتب رسالتك هنا...</string>
+    <string name="send">إرسال</string>
+    <string name="voice">صوت</string>
+    <string name="you_prefix">أنت: </string>
+    <string name="demo_reply">واجهة المحادثة جاهزة. لتفعيل الردود الذكية، لازم توصيل مزود ذكاء اصطناعي بخادم آمن.</string>
+    <string name="speech_prompt">اتكلم دلوقتي</string>
+    <string name="speech_unavailable">التعرّف على الكلام مش متاح على الجهاز ده.</string>
+    <string name="mic_permission_required">لازم تسمح باستخدام الميكروفون عشان تستخدم الصوت.</string>
+</resources>
