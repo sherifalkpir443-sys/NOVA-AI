@@ -22,4 +22,19 @@
     <string name="server_error">AI server returned HTTP error</string>
     <string name="invalid_server_response">The AI server response is missing the reply field.</string>
     <string name="working">Sending…</string>
+    <string name="choose_character">Choose your companion</string>
+    <string name="choose_character_subtitle">Who would you like to talk to?</string>
+    <string name="voice_first_note">Choose a character, allow microphone access, and start talking.</string>
+    <string name="male_character">Male</string>
+    <string name="female_character">Female</string>
+    <string name="tap_to_choose">TAP TO SELECT</string>
+    <string name="voice_companion">YOUR AI COMPANION</string>
+    <string name="ready_to_listen">I'm ready. Tap the button and speak.</string>
+    <string name="start_talking">Start talking</string>
+    <string name="change_character">Change character</string>
+    <string name="mic_privacy_note">The microphone is used only when you tap Start talking.</string>
+    <string name="listening_now">Listening…</string>
+    <string name="thinking">Thinking…</string>
+    <string name="server_not_configured">Connect your AI service to start the conversation.</string>
+    <string name="connection_problem">I couldn't reach the AI service. Check your connection and server settings.</string>
 </resources>
