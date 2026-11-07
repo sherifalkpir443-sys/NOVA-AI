@@ -73,8 +73,8 @@ public class MainActivity extends Activity {
         conversation.setText("MEMORI: أهلاً بيك! أنا MEMORI. تقدر تكتبلي أو تضغط على زر الصوت.\n\nملاحظة: الاتصال بخدمة الذكاء الاصطناعي لسه محتاج إعداد مفتاح الخدمة.");
         conversation.setTextColor(0xFFF2F6FC);
         conversation.setTextSize(16);
-        conversation.setGravity(Gravity.RIGHT);
-        conversation.setTextDirection(View.TEXT_DIRECTION_RTL);
+        conversation.setGravity(Gravity.START);
+        conversation.setTextDirection(View.TEXT_DIRECTION_FIRST_STRONG);
         conversation.setPadding(16, 16, 16, 16);
         scroll.addView(conversation);
         LinearLayout.LayoutParams scrollParams = new LinearLayout.LayoutParams(-1, 0, 1);
@@ -85,7 +85,7 @@ public class MainActivity extends Activity {
         messageInput.setHint(getString(R.string.message_hint));
         messageInput.setTextColor(0xFFFFFFFF);
         messageInput.setHintTextColor(0xFF91A0B5);
-        messageInput.setTextDirection(View.TEXT_DIRECTION_RTL);
+        messageInput.setTextDirection(View.TEXT_DIRECTION_FIRST_STRONG);
         root.addView(messageInput, new LinearLayout.LayoutParams(-1, -2));
 
         LinearLayout actions = new LinearLayout(this);
