@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">MEMORI AI</string>
+    <string name="app_subtitle">나만의 스마트 비서</string>
+    <string name="welcome_message">MEMORI: 안녕하세요! 메시지를 입력하거나 음성 입력을 사용할 수 있습니다.
+
+참고: AI 채팅을 사용하려면 AI 서비스를 설정해야 합니다.</string>
+    <string name="message_hint">메시지를 입력하세요...</string>
+    <string name="send">보내기</string>
+    <string name="voice">음성</string>
+    <string name="you_prefix">나: </string>
+    <string name="demo_reply">인터페이스가 준비되었습니다. 보안 서버를 통해 AI 제공업체를 연결하면 지능형 답변을 사용할 수 있습니다.</string>
+    <string name="speech_prompt">말씀하세요</string>
+    <string name="speech_unavailable">이 기기에서는 음성 인식을 사용할 수 없습니다.</string>
+    <string name="mic_permission_required">음성 입력을 사용하려면 마이크 권한이 필요합니다.</string>
+</resources>
