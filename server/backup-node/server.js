@@ -1,8 +1,8 @@
 import http from "node:http";
 const port = Number(process.env.PORT || 8080);
 const apiKey = process.env.MODEL_API_KEY;
-const model = process.env.MODEL_NAME || "gpt-4o-mini";
-const apiUrl = process.env.MODEL_API_URL || "https://api.openai.com/v1/chat/completions";
+const model = process.env.MODEL_NAME;
+const apiUrl = process.env.MODEL_API_URL;
 const server = http.createServer(async (req, res) => {
   res.setHeader("Content-Type", "application/json; charset=utf-8");
   if (req.method === "GET" && req.url === "/health") {
@@ -11,7 +11,7 @@ const server = http.createServer(async (req, res) => {
   if (req.method !== "POST" || req.url !== "/chat") {
     res.writeHead(404); return res.end(JSON.stringify({error:"Not found"}));
   }
-  if (!apiKey) { res.writeHead(503); return res.end(JSON.stringify({error:"MODEL_API_KEY is not configured"})); }
+  if (!apiKey || !model || !apiUrl) { res.writeHead(503); return res.end(JSON.stringify({error:"Set MODEL_API_KEY, MODEL_API_URL and MODEL_NAME"})); }
   try {
     let raw = "";
     for await (const chunk of req) { raw += chunk; if (raw.length > 20000) throw new Error("Request too large"); }
