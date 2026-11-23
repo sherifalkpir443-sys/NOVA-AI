@@ -37,4 +37,5 @@
     <string name="thinking">Thinking…</string>
     <string name="server_not_configured">Connect your AI service to start the conversation.</string>
     <string name="connection_problem">"I couldn't reach the AI service. Check your connection and server settings."</string>
+    <string name="accessibility_service_description">Allows MEMORI AI to enter text only into the currently focused field after you confirm the action in the app. It does not monitor or send screen content.</string>
 </resources>
