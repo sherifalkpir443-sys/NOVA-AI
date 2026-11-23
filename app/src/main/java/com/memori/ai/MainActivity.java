@@ -384,8 +384,33 @@ public class MainActivity extends Activity {
                 }
                 @Override public void onError(int error) {
                     runOnUiThread(() -> {
-                        if (!waitingForReply && status != null)
-                            status.setText(getString(R.string.ready_to_listen));
+                        if (status == null || waitingForReply) return;
+                        String message;
+                        switch (error) {
+                            case SpeechRecognizer.ERROR_AUDIO:
+                                message = "في مشكلة في الميكروفون. اقفل أي تطبيق بيستخدمه وجرب تاني.";
+                                break;
+                            case SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS:
+                                message = "MEMORI محتاج إذن الميكروفون علشان يسمعك.";
+                                break;
+                            case SpeechRecognizer.ERROR_NETWORK:
+                            case SpeechRecognizer.ERROR_NETWORK_TIMEOUT:
+                                message = "خدمة تحويل الصوت لنص محتاجة اتصال بالإنترنت. اتأكد من الشبكة وجرب تاني.";
+                                break;
+                            case SpeechRecognizer.ERROR_NO_MATCH:
+                            case SpeechRecognizer.ERROR_SPEECH_TIMEOUT:
+                                message = "مسَمعتش كلام واضح. قرّب من الميكروفون واضغط واتكلم تاني.";
+                                break;
+                            default:
+                                message = "التعرّف على الصوت وقف. جرّب تاني وتأكد إن خدمة التعرف على الكلام مفعّلة على الموبايل.";
+                                break;
+                        }
+                        status.setText(message);
+                        Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG).show();
+                        if (speechRecognizer != null) {
+                            speechRecognizer.destroy();
+                            speechRecognizer = null;
+                        }
                     });
                 }
                 @Override public void onResults(Bundle results) {
