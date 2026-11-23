@@ -250,13 +250,6 @@ public class MainActivity extends Activity {
             requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}, REQUEST_AUDIO);
             return;
         }
-        if (Build.VERSION.SDK_INT >= 33 &&
-                checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS)
-                        != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS},
-                    REQUEST_NOTIFICATIONS);
-            return;
-        }
         Intent service = new Intent(this, WakeWordService.class);
         if (Build.VERSION.SDK_INT >= 26) startForegroundService(service);
         else startService(service);
@@ -416,12 +409,11 @@ public class MainActivity extends Activity {
                 onboarding = false;
                 showVoiceHome();
             }
-            if (results.length == 0 || results[0] != PackageManager.PERMISSION_GRANTED)
+            if (results.length == 0 || results[0] != PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, R.string.mic_permission_required, Toast.LENGTH_LONG).show();
-        }
-        if (requestCode == REQUEST_NOTIFICATIONS && results.length > 0 &&
-                results[0] == PackageManager.PERMISSION_GRANTED) {
-            toggleBackgroundListening();
+            } else if (!onboarding && backgroundButton != null) {
+                toggleBackgroundListening();
+            }
         }
     }
 
