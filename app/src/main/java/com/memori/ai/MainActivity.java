@@ -273,7 +273,8 @@ public class MainActivity extends Activity {
                 "تفعيل صلاحية التحكم والكتابة",
                 "كتابة نص في تطبيق آخر بموافقتي",
                 "إعدادات الهاتف",
-                "إدارة التطبيقات"
+                "إدارة التطبيقات",
+                "فتح الآلة الحاسبة"
         };
         new AlertDialog.Builder(this)
                 .setTitle("أدوات MEMORI للهاتف")
@@ -317,10 +318,22 @@ public class MainActivity extends Activity {
                                 }).show();
                     } else if (which == 2) {
                         startActivity(new Intent(Settings.ACTION_SETTINGS));
-                    } else {
+                    } else if (which == 3) {
                         startActivity(new Intent(Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS));
+                    } else {
+                        openCalculator();
                     }
                 }).show();
+    }
+
+    private void openCalculator() {
+        Intent calculator = Intent.makeMainSelectorActivity(Intent.ACTION_MAIN,
+                Intent.CATEGORY_APP_CALCULATOR);
+        if (calculator.resolveActivity(getPackageManager()) != null) {
+            startActivity(calculator);
+        } else {
+            Toast.makeText(this, "مش لاقي تطبيق آلة حاسبة مثبت على الجهاز.", Toast.LENGTH_LONG).show();
+        }
     }
 
     private void openUpdates() {
@@ -388,6 +401,10 @@ public class MainActivity extends Activity {
             intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
             intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault().toLanguageTag());
             intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
+            intent.putExtra(RecognizerIntent.EXTRA_PREFER_OFFLINE, true);
+            intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS, 900);
+            intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS, 900);
+            intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS, 1600);
             intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1);
             speechRecognizer.startListening(intent);
             status.setText(getString(R.string.listening_now));
