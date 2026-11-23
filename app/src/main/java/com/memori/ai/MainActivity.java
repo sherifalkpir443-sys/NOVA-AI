@@ -18,6 +18,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.UtteranceProgressListener;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -52,6 +53,7 @@ public class MainActivity extends Activity {
     private boolean onboarding = false;
     private boolean waitingForReply = false;
     private TextView status;
+    private FaceView activeFace;
     private Button micButton;
     private final ExecutorService network = Executors.newSingleThreadExecutor();
 
@@ -65,6 +67,17 @@ public class MainActivity extends Activity {
                 int language = tts.setLanguage(Locale.getDefault());
                 ttsReady = language != TextToSpeech.LANG_MISSING_DATA &&
                         language != TextToSpeech.LANG_NOT_SUPPORTED;
+                tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
+                    @Override public void onStart(String utteranceId) {
+                        runOnUiThread(() -> { if (activeFace != null) activeFace.setSpeaking(true); });
+                    }
+                    @Override public void onDone(String utteranceId) {
+                        runOnUiThread(() -> { if (activeFace != null) activeFace.setSpeaking(false); });
+                    }
+                    @Override public void onError(String utteranceId) {
+                        runOnUiThread(() -> { if (activeFace != null) activeFace.setSpeaking(false); });
+                    }
+                });
             }
         });
         if (prefs.getString(KEY_CHARACTER, null) == null) showCharacterPicker();
@@ -141,7 +154,8 @@ public class MainActivity extends Activity {
         LinearLayout.LayoutParams cp = new LinearLayout.LayoutParams(0, -1, 1);
         cp.setMargins(dp(6), 0, dp(6), 0);
         parent.addView(card, cp);
-        FaceView face = new FaceView(this, male);
+        activeFace = new FaceView(this, male);
+        FaceView face = activeFace;
         card.addView(face, new LinearLayout.LayoutParams(dp(132), dp(174)));
         TextView name = label(male ? getString(R.string.male_character) : getString(R.string.female_character),
                 18, Color.WHITE, true);
@@ -273,6 +287,7 @@ public class MainActivity extends Activity {
                     int language = tts.setLanguage(Locale.getDefault());
                     if (language == TextToSpeech.LANG_MISSING_DATA || language == TextToSpeech.LANG_NOT_SUPPORTED)
                         tts.setLanguage(Locale.US);
+                    if (activeFace != null) activeFace.setSpeaking(true);
                     tts.speak(answer, TextToSpeech.QUEUE_FLUSH, null, "memori_voice_reply");
                 }
             });
@@ -347,7 +362,12 @@ public class MainActivity extends Activity {
     private class FaceView extends View {
         private final Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
         private final boolean male;
+        private boolean speaking = false;
         FaceView(Activity context, boolean male) { super(context); this.male = male; setLayerType(View.LAYER_TYPE_SOFTWARE, null); }
+        void setSpeaking(boolean value) {
+            speaking = value;
+            if (value) postInvalidate(); else invalidate();
+        }
         @Override protected void onDraw(Canvas canvas) {
             super.onDraw(canvas);
             float w = getWidth(), h = getHeight(), cx = w/2f;
@@ -388,8 +408,18 @@ public class MainActivity extends Activity {
             canvas.drawRoundRect(new RectF(88, 96, 101, 100), 3, 3, p);
             canvas.drawRoundRect(new RectF(119, 96, 132, 100), 3, 3, p);
             p.setColor(0xFF6C4037); canvas.drawLine(110, 101, 106, 119, p);
-            p.setStyle(Paint.Style.STROKE); p.setStrokeWidth(2);
-            p.setColor(0xFF8B4C48); canvas.drawArc(new RectF(99, 121, 121, 137), 15, 150, false, p);
+            if (speaking) {
+                float pulse = (float)(Math.abs(Math.sin(System.nanoTime() / 125_000_000.0)));
+                float mouthHeight = 4f + pulse * 10f;
+                p.setStyle(Paint.Style.FILL);
+                p.setColor(0xFF5B2932);
+                canvas.drawOval(new RectF(101, 123, 119, 123 + mouthHeight), p);
+                p.setColor(0xFFE7A4A0);
+                canvas.drawOval(new RectF(105, 125, 115, 125 + mouthHeight * 0.35f), p);
+            } else {
+                p.setStyle(Paint.Style.STROKE); p.setStrokeWidth(2);
+                p.setColor(0xFF8B4C48); canvas.drawArc(new RectF(99, 121, 121, 137), 15, 150, false, p);
+            }
             p.setStyle(Paint.Style.FILL);
             if (male) {
                 p.setColor(0xFF704638);
@@ -401,6 +431,7 @@ public class MainActivity extends Activity {
             canvas.drawArc(new RectF(30, 15, 190, 205), 205, 105, false, p);
             p.setStyle(Paint.Style.FILL);
             canvas.restore();
+            if (speaking) postInvalidateDelayed(75);
         }
     }
 
