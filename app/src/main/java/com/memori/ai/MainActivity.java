@@ -154,8 +154,7 @@ public class MainActivity extends Activity {
         LinearLayout.LayoutParams cp = new LinearLayout.LayoutParams(0, -1, 1);
         cp.setMargins(dp(6), 0, dp(6), 0);
         parent.addView(card, cp);
-        activeFace = new FaceView(this, male);
-        FaceView face = activeFace;
+        FaceView face = new FaceView(this, male);
         card.addView(face, new LinearLayout.LayoutParams(dp(132), dp(174)));
         TextView name = label(male ? getString(R.string.male_character) : getString(R.string.female_character),
                 18, Color.WHITE, true);
@@ -189,7 +188,8 @@ public class MainActivity extends Activity {
         TextView mode = label(getString(R.string.voice_companion), 14, 0xFF9DBCE0, true);
         mode.setPadding(0, dp(14), 0, dp(2));
         root.addView(mode);
-        FaceView face = new FaceView(this, male);
+        activeFace = new FaceView(this, male);
+        FaceView face = activeFace;
         LinearLayout.LayoutParams fp = new LinearLayout.LayoutParams(dp(220), dp(250));
         fp.topMargin = dp(12);
         root.addView(face, fp);
