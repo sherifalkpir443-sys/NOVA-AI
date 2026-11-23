@@ -112,7 +112,7 @@ public class MainActivity extends Activity {
         root.setGravity(Gravity.CENTER_HORIZONTAL);
         root.setPadding(dp(22), dp(22), dp(22), dp(20));
         GradientDrawable bg = new GradientDrawable(GradientDrawable.Orientation.TL_BR,
-                new int[]{0xFF07142D, 0xFF091D3D, 0xFF050B19});
+                new int[]{0xFF063B83, 0xFF0756A8, 0xFF031B46});
         root.setBackground(bg);
         return root;
     }
@@ -148,7 +148,7 @@ public class MainActivity extends Activity {
         card.setOrientation(LinearLayout.VERTICAL);
         card.setGravity(Gravity.CENTER);
         card.setPadding(dp(8), dp(14), dp(8), dp(16));
-        card.setBackground(panel(0xFF10284A, 24, 0xFF286CA5));
+        card.setBackground(panel(0xFF0B3972, 24, 0xFF48BFFF));
         card.setElevation(dp(8));
         card.setOnClickListener(v -> chooseCharacter(gender));
         LinearLayout.LayoutParams cp = new LinearLayout.LayoutParams(0, -1, 1);
@@ -363,75 +363,135 @@ public class MainActivity extends Activity {
         private final Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
         private final boolean male;
         private boolean speaking = false;
-        FaceView(Activity context, boolean male) { super(context); this.male = male; setLayerType(View.LAYER_TYPE_SOFTWARE, null); }
+        FaceView(Activity context, boolean male) {
+            super(context); this.male = male;
+            setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        }
         void setSpeaking(boolean value) {
             speaking = value;
-            if (value) postInvalidate(); else invalidate();
+            invalidate();
+        }
+        private void fill(Canvas c, int color, float l, float t, float r, float b) {
+            p.setShader(null); p.setStyle(Paint.Style.FILL); p.setColor(color);
+            c.drawOval(new RectF(l,t,r,b),p);
         }
         @Override protected void onDraw(Canvas canvas) {
             super.onDraw(canvas);
-            float w = getWidth(), h = getHeight(), cx = w/2f;
-            float scale = Math.min(w/220f, h/250f);
-            canvas.save();
-            canvas.scale(scale, scale, cx, h/2f);
-            p.setShader(new RadialGradient(cx, 118, 112, new int[]{0x6652C8FF,0x222B8FE8,0x002B8FE8}, null, Shader.TileMode.CLAMP));
-            canvas.drawCircle(cx, 118, 112, p); p.setShader(null);
-            p.setStyle(Paint.Style.STROKE); p.setStrokeWidth(2.5f);
-            p.setColor(0xFF4FCBFF); canvas.drawCircle(cx, 118, 91, p);
-            p.setColor(0x8856AFFF); p.setStrokeWidth(1); canvas.drawCircle(cx, 118, 99, p);
+            float w=getWidth(), h=getHeight(), cx=w/2f;
+            float scale=Math.min(w/220f,h/250f);
+            canvas.save(); canvas.scale(scale,scale,cx,h/2f);
+
+            // Deep blue holographic atmosphere and luminous rings
+            p.setShader(new RadialGradient(cx,119,116,
+                    new int[]{0xAA35BFFF,0x55318FF0,0x002B75D8},null,Shader.TileMode.CLAMP));
+            canvas.drawCircle(cx,119,116,p); p.setShader(null);
+            p.setStyle(Paint.Style.STROKE); p.setStrokeWidth(2.4f); p.setColor(0xFF59D7FF);
+            canvas.drawCircle(cx,119,96,p);
+            p.setStrokeWidth(1f); p.setColor(0x7767BFFF); canvas.drawCircle(cx,119,106,p);
+            p.setColor(0x995DEBFF); canvas.drawArc(new RectF(22,18,198,218),205,92,false,p);
+            canvas.drawArc(new RectF(29,25,191,211),25,80,false,p);
             p.setStyle(Paint.Style.FILL);
-            // shoulders and clothing
-            p.setShader(new LinearGradient(35, 180, 180, 250, 0xFF1C5E9B, 0xFF071A3C, Shader.TileMode.CLAMP));
-            canvas.drawRoundRect(new RectF(39, 177, 181, 270), 48, 48, p); p.setShader(null);
-            // neck
-            p.setColor(0xFFB87960); canvas.drawRoundRect(new RectF(91, 150, 129, 198), 13, 13, p);
+
+            // shoulders, collar and neck with dimensional gradients
+            p.setShader(new LinearGradient(36,178,184,260,
+                    new int[]{0xFF2B83C8,0xFF123F79,0xFF071D43},null,Shader.TileMode.CLAMP));
+            canvas.drawRoundRect(new RectF(32,178,188,270),58,58,p); p.setShader(null);
+            p.setShader(new LinearGradient(88,151,132,198,0xFFE8B89A,0xFF8C5147,Shader.TileMode.CLAMP));
+            canvas.drawRoundRect(new RectF(91,145,129,198),14,14,p); p.setShader(null);
+            p.setColor(0xFFB97860);
+            canvas.drawRoundRect(new RectF(86,177,134,204),12,12,p);
+            p.setColor(0xFFB9DFFF);
+            PathLike.drawCollar(canvas,p);
+
             // ears
-            p.setColor(0xFFC98C70); canvas.drawOval(new RectF(64, 91, 83, 126), p);
-            canvas.drawOval(new RectF(137, 91, 156, 126), p);
-            // face
-            p.setShader(new LinearGradient(65, 48, 153, 165, 0xFFF0C5A6, 0xFFB97860, Shader.TileMode.CLAMP));
-            canvas.drawOval(new RectF(72, 43, 148, 163), p); p.setShader(null);
-            // hair
-            p.setColor(male ? 0xFF182338 : 0xFF241B2A);
-            if (male) {
-                canvas.drawOval(new RectF(69, 36, 151, 91), p);
-                canvas.drawRect(70, 67, 82, 91, p); canvas.drawRect(138, 66, 150, 91, p);
+            p.setShader(new LinearGradient(62,92,83,130,0xFFE9B99A,0xFF9E5D50,Shader.TileMode.CLAMP));
+            canvas.drawOval(new RectF(61,91,84,132),p);
+            canvas.drawOval(new RectF(136,91,159,132),p); p.setShader(null);
+
+            // face silhouette: layered skin lighting and soft shadow
+            p.setShader(new LinearGradient(66,43,154,170,
+                    new int[]{0xFFFFE0C4,0xFFE7B99B,0xFFB87964,0xFF8F554B},
+                    new float[]{0f,.38f,.78f,1f},Shader.TileMode.CLAMP));
+            canvas.drawOval(new RectF(69,37,151,169),p); p.setShader(null);
+            p.setShader(new RadialGradient(92,79,62,
+                    new int[]{0x66FFFFFF,0x00FFFFFF},null,Shader.TileMode.CLAMP));
+            canvas.drawOval(new RectF(72,41,148,166),p); p.setShader(null);
+
+            // hair framing the forehead and temples
+            p.setShader(new LinearGradient(66,29,151,96,0xFF344052,0xFF090F20,Shader.TileMode.CLAMP));
+            if(male) {
+                canvas.drawOval(new RectF(67,27,153,91),p);
+                canvas.drawRoundRect(new RectF(68,64,82,112),8,8,p);
+                canvas.drawRoundRect(new RectF(138,64,152,112),8,8,p);
             } else {
-                canvas.drawOval(new RectF(62, 31, 158, 151), p);
-                p.setColor(0xFFEFC4A5); canvas.drawOval(new RectF(73, 48, 147, 161), p);
-                p.setColor(0xFF241B2A); canvas.drawOval(new RectF(68, 32, 152, 86), p);
-                canvas.drawRoundRect(new RectF(60, 75, 78, 185), 10, 10, p);
-                canvas.drawRoundRect(new RectF(142, 75, 160, 185), 10, 10, p);
+                canvas.drawOval(new RectF(57,24,163,183),p);
+                canvas.drawOval(new RectF(70,36,150,91),p);
+                canvas.drawRoundRect(new RectF(57,72,77,190),12,12,p);
+                canvas.drawRoundRect(new RectF(143,72,163,190),12,12,p);
             }
-            // eyes, brows, nose and smile
-            p.setColor(0xFF342A2A);
-            canvas.drawRoundRect(new RectF(88, 96, 101, 100), 3, 3, p);
-            canvas.drawRoundRect(new RectF(119, 96, 132, 100), 3, 3, p);
-            p.setColor(0xFF6C4037); canvas.drawLine(110, 101, 106, 119, p);
-            if (speaking) {
-                float pulse = (float)(Math.abs(Math.sin(System.nanoTime() / 125_000_000.0)));
-                float mouthHeight = 4f + pulse * 10f;
-                p.setStyle(Paint.Style.FILL);
-                p.setColor(0xFF5B2932);
-                canvas.drawOval(new RectF(101, 123, 119, 123 + mouthHeight), p);
-                p.setColor(0xFFE7A4A0);
-                canvas.drawOval(new RectF(105, 125, 115, 125 + mouthHeight * 0.35f), p);
-            } else {
-                p.setStyle(Paint.Style.STROKE); p.setStrokeWidth(2);
-                p.setColor(0xFF8B4C48); canvas.drawArc(new RectF(99, 121, 121, 137), 15, 150, false, p);
-            }
+            p.setShader(null);
+            // forehead highlight and cheeks
+            p.setShader(new RadialGradient(93,75,32,0x55FFFFFF,0x00FFFFFF,Shader.TileMode.CLAMP));
+            canvas.drawOval(new RectF(77,47,132,104),p); p.setShader(null);
+            p.setShader(new RadialGradient(83,126,22,0x33F47F82,0x00F47F82,Shader.TileMode.CLAMP));
+            canvas.drawCircle(83,126,22,p); canvas.drawCircle(137,126,22,p); p.setShader(null);
+
+            // brows and expressive eyes
+            p.setStyle(Paint.Style.STROKE); p.setStrokeCap(Paint.Cap.ROUND);
+            p.setStrokeWidth(3.5f); p.setColor(0xFF49312D);
+            canvas.drawArc(new RectF(82,82,105,97),205,125,false,p);
+            canvas.drawArc(new RectF(115,82,138,97),210,125,false,p);
             p.setStyle(Paint.Style.FILL);
-            if (male) {
-                p.setColor(0xFF704638);
-                canvas.drawOval(new RectF(80, 130, 140, 163), p);
-                p.setColor(0xFFB97860); canvas.drawOval(new RectF(91, 128, 129, 145), p);
+            p.setShader(new LinearGradient(0,94,0,106,0xFFFFFFFF,0xFFD8E7F2,Shader.TileMode.CLAMP));
+            canvas.drawOval(new RectF(83,94,106,107),p);
+            canvas.drawOval(new RectF(114,94,137,107),p); p.setShader(null);
+            p.setColor(0xFF253A4B);
+            canvas.drawCircle(95,100,5.5f,p); canvas.drawCircle(125,100,5.5f,p);
+            p.setColor(0xFF101B2B);
+            canvas.drawCircle(96,100,2.7f,p); canvas.drawCircle(126,100,2.7f,p);
+            p.setColor(Color.WHITE); canvas.drawCircle(97,98,1.5f,p); canvas.drawCircle(127,98,1.5f,p);
+
+            // nose bridge and soft nostril shadow
+            p.setStyle(Paint.Style.STROKE); p.setStrokeWidth(2.1f); p.setStrokeCap(Paint.Cap.ROUND);
+            p.setColor(0x66864F47); canvas.drawLine(110,103,106,120,p);
+            canvas.drawArc(new RectF(101,115,119,129),18,145,false,p);
+            p.setStyle(Paint.Style.FILL);
+
+            // mouth moves while TTS is speaking
+            if(speaking) {
+                float pulse=(float)Math.abs(Math.sin(System.nanoTime()/115_000_000.0));
+                float mh=5f+pulse*11f;
+                p.setColor(0xFF55232C); canvas.drawOval(new RectF(101,132,119,132+mh),p);
+                p.setColor(0xFFE89A9A); canvas.drawOval(new RectF(105,134,115,134+mh*.35f),p);
+                postInvalidateDelayed(70);
+            } else {
+                p.setStyle(Paint.Style.STROKE); p.setStrokeWidth(2.2f);
+                p.setColor(0xFF98564D); canvas.drawArc(new RectF(99,128,121,143),15,150,false,p);
+                p.setStyle(Paint.Style.FILL);
             }
-            // blue rim accents
-            p.setStyle(Paint.Style.STROKE); p.setStrokeWidth(2); p.setColor(0xFF63D9FF);
-            canvas.drawArc(new RectF(30, 15, 190, 205), 205, 105, false, p);
+
+            // subtle facial hair on male avatar
+            if(male) {
+                p.setShader(new LinearGradient(78,143,142,169,0xAA26303B,0x0026303B,Shader.TileMode.CLAMP));
+                canvas.drawArc(new RectF(78,132,142,174),5,170,true,p); p.setShader(null);
+                p.setColor(0xFFE0AD8E); canvas.drawOval(new RectF(91,133,129,150),p);
+            }
+
+            // blue luminous edge around the portrait
+            p.setStyle(Paint.Style.STROKE); p.setStrokeWidth(2.2f); p.setColor(0xFF70E4FF);
+            canvas.drawArc(new RectF(29,17,191,218),205,130,false,p);
             p.setStyle(Paint.Style.FILL);
             canvas.restore();
-            if (speaking) postInvalidateDelayed(75);
+        }
+    }
+
+    private static class PathLike {
+        static void drawCollar(Canvas canvas, Paint paint) {
+            paint.setShader(null); paint.setColor(0xFFB8DFFF);
+            android.graphics.Path path=new android.graphics.Path();
+            path.moveTo(89,178); path.lineTo(110,194); path.lineTo(131,178);
+            path.lineTo(124,211); path.lineTo(96,211); path.close();
+            canvas.drawPath(path,paint);
         }
     }
 
