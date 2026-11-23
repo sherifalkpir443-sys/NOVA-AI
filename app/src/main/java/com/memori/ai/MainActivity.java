@@ -326,11 +326,11 @@ public class MainActivity extends Activity {
     private void openUpdates() {
         new AlertDialog.Builder(this)
                 .setTitle("تحديث MEMORI AI")
-                .setMessage("هتفتح صفحة الإصدارات الرسمية. نزّل أحدث APK وثبّته فوق النسخة الحالية. أندرويد هيطلب موافقتك على التثبيت.")
+                .setMessage("هتفتح صفحة بناء التطبيق على GitHub. افتح أحدث عملية ناجحة ونزّل ملف MEMORI-AI-debug-apk، وبعدها فك الضغط وثبّت APK. أندرويد هيطلب موافقتك على التثبيت.")
                 .setNegativeButton("إلغاء", null)
                 .setPositiveButton("فتح صفحة التحديث", (d, w) -> {
                     Intent intent = new Intent(Intent.ACTION_VIEW,
-                            android.net.Uri.parse("https://github.com/sherifalkpir443-sys/NOVA-AI/releases"));
+                            android.net.Uri.parse("https://github.com/sherifalkpir443-sys/NOVA-AI/actions/workflows/android-build.yml"));
                     startActivity(intent);
                 }).show();
     }
