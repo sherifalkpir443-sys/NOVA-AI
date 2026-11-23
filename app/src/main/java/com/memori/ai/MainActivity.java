@@ -54,6 +54,7 @@ public class MainActivity extends Activity {
     private static final int REQUEST_NOTIFICATIONS = 43;
     private static final String PREFS = "memori_settings";
     private static final String KEY_ENDPOINT = "chat_endpoint";
+    private static final String KEY_BACKUP_ENDPOINT = "chat_backup_endpoint";
     private static final String KEY_CHARACTER = "selected_character";
     private SharedPreferences prefs;
     private TextToSpeech tts;
@@ -414,34 +415,38 @@ public class MainActivity extends Activity {
     }
 
     private void sendToAssistant(String spoken) {
-        String endpoint = prefs.getString(KEY_ENDPOINT, "");
-        if (endpoint.isEmpty()) {
-            status.setText(getString(R.string.server_not_configured));
-            showServerSettings();
-            return;
-        }
+        String local = LocalAssistant.tryHandle(spoken);
+        if (local != null) { deliverReply(local); return; }
         waitingForReply = true;
         micButton.setEnabled(false);
         status.setText(getString(R.string.thinking));
         network.execute(() -> {
-            String reply;
-            try { reply = requestReply(endpoint, spoken); }
-            catch (Exception e) { reply = getString(R.string.connection_problem); }
+            String primary = prefs.getString(KEY_ENDPOINT, "").trim();
+            String backup = prefs.getString(KEY_BACKUP_ENDPOINT, "").trim();
+            String reply = null;
+            if (!primary.isEmpty()) try { reply = requestReply(primary, spoken); } catch (Exception ignored) { }
+            if (reply == null && !backup.isEmpty() && !backup.equals(primary))
+                try { reply = requestReply(backup, spoken); } catch (Exception ignored) { }
+            if (reply == null) reply = LocalAssistant.offlineReply(spoken);
             final String answer = reply;
             runOnUiThread(() -> {
                 if (isFinishing() || isDestroyed()) return;
                 waitingForReply = false;
                 micButton.setEnabled(true);
-                status.setText(answer);
-                if (tts != null && ttsReady) {
-                    int language = tts.setLanguage(Locale.getDefault());
-                    if (language == TextToSpeech.LANG_MISSING_DATA || language == TextToSpeech.LANG_NOT_SUPPORTED)
-                        tts.setLanguage(Locale.US);
-                    if (activeFace != null) activeFace.setSpeaking(true);
-                    tts.speak(answer, TextToSpeech.QUEUE_FLUSH, null, "memori_voice_reply");
-                }
+                deliverReply(answer);
             });
         });
+    }
+
+    private void deliverReply(String answer) {
+        if (status != null) status.setText(answer);
+        if (tts != null && ttsReady) {
+            int language = tts.setLanguage(Locale.getDefault());
+            if (language == TextToSpeech.LANG_MISSING_DATA || language == TextToSpeech.LANG_NOT_SUPPORTED)
+                tts.setLanguage(Locale.US);
+            if (activeFace != null) activeFace.setSpeaking(true);
+            tts.speak(answer, TextToSpeech.QUEUE_FLUSH, null, "memori_voice_reply");
+        }
     }
 
     private String requestReply(String endpoint, String message) throws Exception {
@@ -449,8 +454,8 @@ public class MainActivity extends Activity {
         try {
             c = (HttpURLConnection)new URL(endpoint + "/chat").openConnection();
             c.setRequestMethod("POST");
-            c.setConnectTimeout(15000);
-            c.setReadTimeout(30000);
+            c.setConnectTimeout(7000);
+            c.setReadTimeout(18000);
             c.setDoOutput(true);
             c.setRequestProperty("Content-Type", "application/json; charset=utf-8");
             JSONObject body = new JSONObject();
@@ -475,25 +480,39 @@ public class MainActivity extends Activity {
     }
 
     private void showServerSettings() {
-        EditText input = new EditText(this);
-        input.setSingleLine(true);
-        input.setHint("https://your-ai-server.com");
-        input.setText(prefs.getString(KEY_ENDPOINT, ""));
+        LinearLayout fields = new LinearLayout(this);
+        fields.setOrientation(LinearLayout.VERTICAL);
+        fields.setPadding(dp(18), dp(8), dp(18), dp(4));
+        EditText primary = new EditText(this);
+        primary.setSingleLine(true);
+        primary.setHint("الخادم الأساسي https://...");
+        primary.setText(prefs.getString(KEY_ENDPOINT, ""));
+        fields.addView(primary);
+        EditText backup = new EditText(this);
+        backup.setSingleLine(true);
+        backup.setHint("الخادم الاحتياطي https://...");
+        backup.setText(prefs.getString(KEY_BACKUP_ENDPOINT, ""));
+        fields.addView(backup);
         new AlertDialog.Builder(this)
-                .setTitle(R.string.ai_server)
-                .setMessage(R.string.ai_server_help)
-                .setView(input)
+                .setTitle("خوادم MEMORI AI")
+                .setMessage("اكتب عنوانين حقيقيين لخادمين منشورين. التطبيق يجرب الأساسي ثم الاحتياطي تلقائيًا. اترك أي خانة فارغة لو الخادم غير جاهز.")
+                .setView(fields)
                 .setNegativeButton(android.R.string.cancel, null)
-                .setNeutralButton(R.string.clear, (d, w) -> prefs.edit().remove(KEY_ENDPOINT).apply())
+                .setNeutralButton(R.string.clear, (d, w) -> prefs.edit()
+                        .remove(KEY_ENDPOINT).remove(KEY_BACKUP_ENDPOINT).apply())
                 .setPositiveButton(android.R.string.ok, (d, w) -> {
-                    String value = input.getText().toString().trim();
-                    if (!value.isEmpty() && !value.startsWith("https://")) {
+                    String p = primary.getText().toString().trim();
+                    String bk = backup.getText().toString().trim();
+                    if ((!p.isEmpty() && !p.startsWith("https://")) ||
+                            (!bk.isEmpty() && !bk.startsWith("https://"))) {
                         Toast.makeText(this, R.string.https_required, Toast.LENGTH_LONG).show();
                         return;
                     }
-                    while (value.endsWith("/")) value = value.substring(0, value.length() - 1);
-                    prefs.edit().putString(KEY_ENDPOINT, value).apply();
-                    if (status != null) status.setText(getString(R.string.ready_to_listen));
+                    while (p.endsWith("/")) p = p.substring(0, p.length() - 1);
+                    while (bk.endsWith("/")) bk = bk.substring(0, bk.length() - 1);
+                    prefs.edit().putString(KEY_ENDPOINT, p)
+                            .putString(KEY_BACKUP_ENDPOINT, bk).apply();
+                    if (status != null) status.setText("تم حفظ إعدادات الخوادم");
                 }).show();
     }
 
