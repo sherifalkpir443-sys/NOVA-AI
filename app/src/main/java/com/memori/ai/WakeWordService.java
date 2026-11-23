@@ -102,7 +102,7 @@ public class WakeWordService extends Service {
             recognizer.setRecognitionListener(new RecognitionListener() {
                 @Override public void onReadyForSpeech(Bundle params) { }
                 @Override public void onBeginningOfSpeech() { }
-                @Override public void onRmsChanged(float rmsdB) { }
+                @Override public void onRmsChanged(float rmsdB) { /* Android controls input gain; RMS is not an adjustable hardware gain. */ }
                 @Override public void onBufferReceived(byte[] buffer) { }
                 @Override public void onEndOfSpeech() { }
                 @Override public void onError(int error) { scheduleRestart(); }
@@ -127,7 +127,11 @@ public class WakeWordService extends Service {
             request.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                     RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
             request.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "ar-EG");
-            request.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, false);
+            request.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
+            request.putExtra(RecognizerIntent.EXTRA_PREFER_OFFLINE, true);
+            request.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS, 900);
+            request.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS, 900);
+            request.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS, 1600);
             request.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1);
             recognizer.startListening(request);
         } catch (Exception e) {
@@ -137,7 +141,7 @@ public class WakeWordService extends Service {
 
     private void scheduleRestart() {
         handler.removeCallbacksAndMessages(null);
-        if (!stopping && isRunning) handler.postDelayed(this::startRecognition, 1200);
+        if (!stopping && isRunning) handler.postDelayed(this::startRecognition, 1600);
     }
 
     @Override public void onDestroy() {
