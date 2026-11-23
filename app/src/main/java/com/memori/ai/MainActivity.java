@@ -2,6 +2,7 @@ package com.memori.ai;
 
 import android.Manifest;
 import android.app.Activity;
+import android.animation.ValueAnimator;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,6 +17,8 @@ import android.graphics.RadialGradient;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
@@ -363,9 +366,32 @@ public class MainActivity extends Activity {
         private final Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
         private final boolean male;
         private boolean speaking = false;
+        private float blink = 0f;
+        private final Handler animationHandler = new Handler(Looper.getMainLooper());
+        private final Runnable blinkLoop = new Runnable() {
+            @Override public void run() {
+                ValueAnimator animator = ValueAnimator.ofFloat(0f, 1f, 0f);
+                animator.setDuration(190);
+                animator.addUpdateListener(a -> {
+                    blink = (float) a.getAnimatedValue();
+                    invalidate();
+                });
+                animator.start();
+                animationHandler.postDelayed(this, 3400);
+            }
+        };
         FaceView(Activity context, boolean male) {
             super(context); this.male = male;
             setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        }
+        @Override protected void onAttachedToWindow() {
+            super.onAttachedToWindow();
+            animationHandler.removeCallbacks(blinkLoop);
+            animationHandler.postDelayed(blinkLoop, 900);
+        }
+        @Override protected void onDetachedFromWindow() {
+            animationHandler.removeCallbacks(blinkLoop);
+            super.onDetachedFromWindow();
         }
         void setSpeaking(boolean value) {
             speaking = value;
@@ -450,6 +476,19 @@ public class MainActivity extends Activity {
             p.setColor(0xFF101B2B);
             canvas.drawCircle(96,100,2.7f,p); canvas.drawCircle(126,100,2.7f,p);
             p.setColor(Color.WHITE); canvas.drawCircle(97,98,1.5f,p); canvas.drawCircle(127,98,1.5f,p);
+            if (blink > 0f) {
+                p.setShader(new LinearGradient(0,94,0,108,0xFFFFE0C4,0xFFE7B99B,Shader.TileMode.CLAMP));
+                float lid = 13f * blink;
+                canvas.drawRoundRect(new RectF(82,94,107,94+lid),6,6,p);
+                canvas.drawRoundRect(new RectF(113,94,138,94+lid),6,6,p);
+                p.setShader(null);
+                p.setStyle(Paint.Style.STROKE);
+                p.setStrokeWidth(1.6f);
+                p.setColor(0xFF8F554B);
+                canvas.drawLine(83,94+lid,106,94+lid,p);
+                canvas.drawLine(114,94+lid,137,94+lid,p);
+                p.setStyle(Paint.Style.FILL);
+            }
 
             // nose bridge and soft nostril shadow
             p.setStyle(Paint.Style.STROKE); p.setStrokeWidth(2.1f); p.setStrokeCap(Paint.Cap.ROUND);
