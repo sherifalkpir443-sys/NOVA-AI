@@ -12,7 +12,7 @@ Deploy `server/cloudflare/worker.js` as a Cloudflare Worker and set its `GEMINI_
 
 ## Independent backup
 Deploy `server/backup-node/server.js` on a hosting provider independent of Cloudflare or on a server you control. It supports `GET /health` and `POST /chat`.
-Environment variables: `MODEL_API_KEY` (secret), optional `MODEL_API_URL`, optional `MODEL_NAME` (default gpt-4o-mini), and optional `PORT`. The default model API may incur charges; confirm pricing before use. Never put keys in the APK or Git repository.
+Environment variables: `MODEL_API_KEY` (secret), `MODEL_API_URL`, `MODEL_NAME`, and optional `PORT`. No paid provider is selected by default: choose a provider with a free tier if available, and check its current limits and terms before use. Free tiers can change and are not guaranteed to be unlimited. Never put keys in the APK or Git repository.
 
 After both are deployed with HTTPS, enter their real base URLs in the app settings. A blank endpoint is safer than a placeholder.
 
