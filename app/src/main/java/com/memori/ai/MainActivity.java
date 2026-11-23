@@ -17,6 +17,7 @@ import android.graphics.RadialGradient;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.speech.RecognizerIntent;
@@ -49,6 +50,7 @@ import java.util.concurrent.Executors;
 public class MainActivity extends Activity {
     private static final int REQUEST_SPEECH = 41;
     private static final int REQUEST_AUDIO = 42;
+    private static final int REQUEST_NOTIFICATIONS = 43;
     private static final String PREFS = "memori_settings";
     private static final String KEY_ENDPOINT = "chat_endpoint";
     private static final String KEY_CHARACTER = "selected_character";
@@ -61,6 +63,7 @@ public class MainActivity extends Activity {
     private TextView status;
     private FaceView activeFace;
     private Button micButton;
+    private Button backgroundButton;
     private final ExecutorService network = Executors.newSingleThreadExecutor();
 
     @Override public void onCreate(Bundle state) {
@@ -220,6 +223,11 @@ public class MainActivity extends Activity {
         mp.setMargins(dp(8), dp(18), dp(8), dp(10));
         root.addView(micButton, mp);
 
+        backgroundButton = smallButton(WakeWordService.isRunning
+                ? "إيقاف الاستعداد بالخلفية" : "تفعيل الاستعداد بالخلفية");
+        backgroundButton.setOnClickListener(v -> toggleBackgroundListening());
+        root.addView(backgroundButton, new LinearLayout.LayoutParams(-1, dp(48)));
+
         Button change = smallButton(getString(R.string.change_character));
         change.setOnClickListener(v -> showCharacterPicker());
         root.addView(change, new LinearLayout.LayoutParams(-2, dp(46)));
@@ -228,6 +236,32 @@ public class MainActivity extends Activity {
         privacy.setPadding(dp(12), dp(14), dp(12), 0);
         root.addView(privacy);
         setContentView(root);
+    }
+
+    private void toggleBackgroundListening() {
+        if (WakeWordService.isRunning) {
+            stopService(new Intent(this, WakeWordService.class)
+                    .setAction("com.memori.ai.STOP_WAKE_WORD"));
+            backgroundButton.setText("تفعيل الاستعداد بالخلفية");
+            return;
+        }
+        if (checkSelfPermission(Manifest.permission.RECORD_AUDIO)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}, REQUEST_AUDIO);
+            return;
+        }
+        if (Build.VERSION.SDK_INT >= 33 &&
+                checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS)
+                        != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS},
+                    REQUEST_NOTIFICATIONS);
+            return;
+        }
+        Intent service = new Intent(this, WakeWordService.class);
+        if (Build.VERSION.SDK_INT >= 26) startForegroundService(service);
+        else startService(service);
+        backgroundButton.setText("إيقاف الاستعداد بالخلفية");
+        Toast.makeText(this, "تم طلب تشغيل الاستعداد الصوتي المحلي", Toast.LENGTH_LONG).show();
     }
 
     private Button smallButton(String text) {
@@ -384,6 +418,10 @@ public class MainActivity extends Activity {
             }
             if (results.length == 0 || results[0] != PackageManager.PERMISSION_GRANTED)
                 Toast.makeText(this, R.string.mic_permission_required, Toast.LENGTH_LONG).show();
+        }
+        if (requestCode == REQUEST_NOTIFICATIONS && results.length > 0 &&
+                results[0] == PackageManager.PERMISSION_GRANTED) {
+            toggleBackgroundListening();
         }
     }
 
