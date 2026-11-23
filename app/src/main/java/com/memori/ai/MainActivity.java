@@ -6,6 +6,7 @@ import android.animation.ValueAnimator;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.provider.Settings;
 import android.content.pm.PackageManager;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -228,6 +229,16 @@ public class MainActivity extends Activity {
         backgroundButton.setOnClickListener(v -> toggleBackgroundListening());
         root.addView(backgroundButton, new LinearLayout.LayoutParams(-1, dp(48)));
 
+        Button deviceControl = smallButton("التحكم في التطبيقات والكتابة");
+        deviceControl.setOnClickListener(v -> showDeviceControls());
+        LinearLayout.LayoutParams controlParams = new LinearLayout.LayoutParams(-1, dp(48));
+        controlParams.topMargin = dp(8);
+        root.addView(deviceControl, controlParams);
+
+        Button updateButton = smallButton("فحص التحديثات وتنزيل آخر إصدار");
+        updateButton.setOnClickListener(v -> openUpdates());
+        root.addView(updateButton, new LinearLayout.LayoutParams(-1, dp(46)));
+
         Button change = smallButton(getString(R.string.change_character));
         change.setOnClickListener(v -> showCharacterPicker());
         root.addView(change, new LinearLayout.LayoutParams(-2, dp(46)));
@@ -255,6 +266,73 @@ public class MainActivity extends Activity {
         else startService(service);
         backgroundButton.setText("إيقاف الاستعداد بالخلفية");
         Toast.makeText(this, "تم طلب تشغيل الاستعداد الصوتي المحلي", Toast.LENGTH_LONG).show();
+    }
+
+    private void showDeviceControls() {
+        String[] options = {
+                "تفعيل صلاحية التحكم والكتابة",
+                "كتابة نص في تطبيق آخر بموافقتي",
+                "إعدادات الهاتف",
+                "إدارة التطبيقات"
+        };
+        new AlertDialog.Builder(this)
+                .setTitle("أدوات MEMORI للهاتف")
+                .setItems(options, (dialog, which) -> {
+                    if (which == 0) {
+                        new AlertDialog.Builder(this)
+                                .setTitle("صلاحية إمكانية الوصول")
+                                .setMessage("السماح لـ MEMORI باستخدام خدمة إمكانية الوصول اختياري. بعد تفعيلها، لن يُكتب أي نص إلا بعد تأكيدك داخل التطبيق، وسيُدرج النص مرة واحدة في أول خانة كتابة تركز عليها في التطبيق الآخر. لا نقرأ محتوى الشاشة ولا نرسله للخادم.")
+                                .setNegativeButton("إلغاء", null)
+                                .setPositiveButton("فتح إعدادات الصلاحية", (d, w) ->
+                                        startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)))
+                                .show();
+                    } else if (which == 1) {
+                        if (!MemoriAccessibilityService.isConnected()) {
+                            new AlertDialog.Builder(this)
+                                    .setMessage("فعّل خدمة إمكانية الوصول أولاً، ثم ارجع هنا.")
+                                    .setPositiveButton("فتح الإعدادات", (d, w) ->
+                                            startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)))
+                                    .setNegativeButton("إلغاء", null).show();
+                            return;
+                        }
+                        EditText textInput = new EditText(this);
+                        textInput.setHint("اكتب النص اللي عايز MEMORI تدخله");
+                        textInput.setMinLines(3);
+                        new AlertDialog.Builder(this)
+                                .setTitle("النص المطلوب")
+                                .setView(textInput)
+                                .setNegativeButton("إلغاء", null)
+                                .setPositiveButton("متابعة", (d, w) -> {
+                                    String text = textInput.getText().toString();
+                                    if (text.trim().isEmpty()) return;
+                                    new AlertDialog.Builder(this)
+                                            .setTitle("تأكيد الكتابة")
+                                            .setMessage("بعد موافقتك، افتح التطبيق المطلوب واضغط على خانة الكتابة. MEMORI هيدخل النص مرة واحدة في أول خانة مناسبة.")
+                                            .setNegativeButton("إلغاء", null)
+                                            .setPositiveButton("أوافق واكتب", (confirm, cw) -> {
+                                                prefs.edit().putString("pending_text", text)
+                                                        .putBoolean("pending_text_armed", true).apply();
+                                                Toast.makeText(this, "افتح التطبيق المطلوب واضغط داخل خانة الكتابة.", Toast.LENGTH_LONG).show();
+                                            }).show();
+                                }).show();
+                    } else if (which == 2) {
+                        startActivity(new Intent(Settings.ACTION_SETTINGS));
+                    } else {
+                        startActivity(new Intent(Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS));
+                    }
+                }).show();
+    }
+
+    private void openUpdates() {
+        new AlertDialog.Builder(this)
+                .setTitle("تحديث MEMORI AI")
+                .setMessage("هتفتح صفحة الإصدارات الرسمية. نزّل أحدث APK وثبّته فوق النسخة الحالية. أندرويد هيطلب موافقتك على التثبيت.")
+                .setNegativeButton("إلغاء", null)
+                .setPositiveButton("فتح صفحة التحديث", (d, w) -> {
+                    Intent intent = new Intent(Intent.ACTION_VIEW,
+                            android.net.Uri.parse("https://github.com/sherifalkpir443-sys/NOVA-AI/releases"));
+                    startActivity(intent);
+                }).show();
     }
 
     private Button smallButton(String text) {
